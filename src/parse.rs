@@ -4,6 +4,7 @@ peg::parser! {
     pub grammar rushell() for str {
         rule string() -> String
             = "\"" s:[^ '"' | '\n']* "\"" {s.into_iter().collect()}
+            / "\'" s:[^ '\'' | '\n']* "\'" {s.into_iter().collect()}
         rule identifier() -> String
             = s:string() {s}
             / s:[^ ' ' | '\t' | '\n']+ {s.into_iter().collect()}

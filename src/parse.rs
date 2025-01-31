@@ -7,7 +7,7 @@ peg::parser! {
             / "\'" s:[^ '\'' | '\n']* "\'" {s.into_iter().collect()}
         rule identifier() -> String
             = s:string() {s}
-            / s:[^ ' ' | '\t' | '\n']+ {s.into_iter().collect()}
+            / s:[^ ' ' | '\t' | '\n' | '"']+ {s.into_iter().collect()}
         rule noargs() -> ExecCommand
             = program:identifier() { ExecCommand::new(program, vec![]) }
         rule withargs() -> ExecCommand

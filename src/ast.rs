@@ -1,4 +1,6 @@
-use std::{io::Result, process::{Command, Child, Stdio}};
+use std::process::{Child, Command, Stdio};
+
+use crate::error::{Result, RushellError::CommandNotFound};
 
 pub trait ShellCommand {
     fn eval(&self, stdin: Stdio) -> Result<Child>;
@@ -21,5 +23,11 @@ impl ShellCommand for ExecCommand {
             .args(&self.args)
             .stdin(stdin)
             .spawn()
+            .map_err(|err| match err.kind() {
+                std::io::ErrorKind::NotFound => {
+                    CommandNotFound(self.program.clone())
+                }
+                _ => err.into(),
+            })
     }
 }
